@@ -1,1 +1,29 @@
-<p>equipo works!</p>
+<div class="team-card">
+  <div class="team-header">
+    <img *ngIf="equipo().logoUrl" [src]="equipo().logoUrl" alt="logo" class="logo" />
+    <div class="team-name">{{ equipo().nombre }}</div>
+  </div>
+
+  <div class="score">{{ equipo().punteoTotal }}</div>
+
+  <div class="controls">
+    <button (click)="tablero.addPuntos(side(), -1)">-1</button>
+    <button (click)="tablero.addPuntos(side(), 1)">+1</button>
+    <button (click)="tablero.addPuntos(side(), 2)">+2</button>
+    <button (click)="tablero.addPuntos(side(), 3)">+3</button>
+  </div>
+
+  <div class="fouls">
+    <span>Faltas: {{ equipo().faltasTotales }}</span>
+    <div class="foul-buttons">
+      <button (click)="tablero.addFalta(side(), 1)">+1</button>
+      <button (click)="tablero.addFalta(side(), -1)">-1</button>
+    </div>
+  </div>
+
+  <div class="bonus">
+    <span>BONUS</span>
+    <div class="lamp" [class.on]="equipo().bonus"></div>
+    <button class="mini" (click)="tablero.toggleBonus(side())">activar</button>
+  </div>
+</div>

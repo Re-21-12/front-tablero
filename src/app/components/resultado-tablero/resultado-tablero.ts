@@ -1,16 +1,14 @@
-import { Component, input, Signal, signal } from '@angular/core';
-import { EquipoInterface, PartidoInterface } from '../../interfaces/tablero-interface';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TableroService } from '../../services/tablero-service';
 
 @Component({
   selector: 'app-resultado-tablero',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './resultado-tablero.html',
-  styleUrl: './resultado-tablero.css'
+  styleUrl: './resultado-tablero.css',
 })
 export class ResultadoTablero {
-
-
-  partido = input.required <PartidoInterface> ();
-  equipo_local:Signal<EquipoInterface> = signal<EquipoInterface>(this.partido().equipos[0]); 
-  equipo_visitante:Signal<EquipoInterface> = signal<EquipoInterface>(this.partido().equipos[1]);
+  constructor(public tablero: TableroService) {}
 }

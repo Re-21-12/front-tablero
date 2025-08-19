@@ -1,0 +1,129 @@
+/* lo que ya tienes */
+.layout{
+  display:grid;
+  grid-template-columns: 1fr minmax(340px, 520px) 1fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+.center{ display:flex; align-items:center; justify-content:center; }
+@media (max-width: 900px){
+  .layout{ grid-template-columns: 1fr; }
+}
+
+/* NUEVO: botón flotante y estilos fullscreen */
+.layout-root { position: relative; }
+
+.fs-btn{
+  position: absolute;
+  top: .5rem; right: .5rem;
+  z-index: 10;
+  padding: .45rem .7rem;
+  border: none; border-radius: .5rem;
+  background: #1b9aaa; color: #fff; font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0,0,0,.25);
+}
+.fs-btn:hover{ filter: brightness(1.1); }
+
+/* Cuando el contenedor está en fullscreen */
+.layout-root:fullscreen{
+  width: 100vw;
+  height: 100vh;
+  background: #0f1b2e; 
+  padding: .5rem;
+}
+.layout-root:fullscreen .layout{
+  height: 100%;
+  align-items: center;
+}
+.layout-root:fullscreen .fs-btn{
+  position: fixed; 
+  top: 1rem; right: 1rem;
+}
+
+/* Ajuste de tamaños en fullscreen  */
+.layout-root:fullscreen .center .timer{
+  font-size: clamp(3rem, 12vw, 7rem);
+}
+/* lo que ya tienes */
+.layout{
+  display:grid;
+  grid-template-columns: 1fr minmax(340px, 520px) 1fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+.center{ display:flex; align-items:center; justify-content:center; }
+@media (max-width: 900px){
+  .layout{ grid-template-columns: 1fr; }
+}
+
+/* NUEVO: botón flotante y estilos fullscreen */
+.layout-root { position: relative; }
+
+.fs-btn{
+  position: absolute;
+  top: .5rem; right: .5rem;
+  z-index: 10;
+  padding: .45rem .7rem;
+  border: none; border-radius: .5rem;
+  background: #1b9aaa; color: #fff; font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0,0,0,.25);
+}
+.fs-btn:hover{ filter: brightness(1.1); }
+
+/* Cuando el contenedor está en fullscreen */
+.layout-root:fullscreen{
+  width: 100vw;
+  height: 100vh;
+  background: #0f1b2e; /* de juego */
+  padding: .5rem;
+}
+.layout-root:fullscreen .layout{
+  height: 100%;
+  align-items: center;
+}
+.layout-root:fullscreen .fs-btn{
+  position: fixed; /* que no se mueva al hacer scroll */
+  top: 1rem; right: 1rem;
+}
+
+/* Ajuste de tamaños en fullscreen */
+.layout-root:fullscreen .center .timer{
+  font-size: clamp(3rem, 12vw, 7rem);
+}
+
+/*gameover box*/
+.layout-root { position: relative; } 
+
+.gameover{
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.55);
+  border-radius: 1rem;
+  z-index: 20;
+}
+.gameover-box{
+  display: flex;                
+  flex-direction: column;
+  align-items: center;
+  gap: .6rem;                    
+  text-align: center;
+  color: #ffe066;
+  text-shadow: 0 4px 12px rgba(0,0,0,.6);
+}
+.gameover-box .title{
+  margin: 0;                     
+  line-height: .9;              
+  font-weight: 900;
+  font-size: clamp(2rem, 8vw, 6rem);
+  letter-spacing: .06em;
+}
+.gameover-box .winner{
+  margin: 0;                     
+  font-weight: 800;
+  font-size: clamp(1.2rem, 3.5vw, 2rem);
+  padding: .2rem .6rem;         
+  background: rgba(0,0,0,.25);
+  border-radius: .4rem;
+}

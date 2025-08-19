@@ -1,3 +1,28 @@
-<app-page-layout>
+<div class="layout-root" #root>
+  <button class="fs-btn" (click)="toggleFullscreen()"
+          [title]="isFullscreen ? 'Salir de pantalla completa (F)' : 'Pantalla completa (F)'">
+    {{ isFullscreen ? 'Salir' : 'Full' }}
+  </button>
 
-</app-page-layout>
+  <div class="layout">
+    <app-equipo [equipo]="tablero.local()" side="LOCAL"></app-equipo>
+
+    <div class="center">
+      <app-resultado-tablero></app-resultado-tablero>
+    </div>
+
+    <app-equipo [equipo]="tablero.visitante()" side="VISITANTE"></app-equipo>
+  </div>
+
+  <!-- OVERLAY GAME OVER para todo el tablero -->
+  <div class="gameover"
+       *ngIf="!tablero.partido().enJuego
+              && tablero.partido().tiempoRestanteSeg === 0
+              && tablero.partido().cuartoActual === 4
+              && (tablero.local().punteoTotal !== tablero.visitante().punteoTotal)">
+    <div class="gameover-box">
+      <div class="title">JUEGO TERMINADO</div>
+      <div class="winner">GANADOR: {{ winnerName }}</div>
+    </div>
+  </div>
+</div>

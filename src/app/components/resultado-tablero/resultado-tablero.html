@@ -1,3 +1,30 @@
-<p>{{partido()}}</p> 
-//interpolar//
-<p>{{equipo_local()}}</p>
+<div class="scoreboard">
+  <div class="title">{{ tablero.partido().nombre }}</div>
+
+  <div class="timer" [class.buzzer]="tablero.buzzerOn()">
+    {{ tablero.tiempoFormateado() }}
+  </div>
+
+  <div class="controls">
+    <button (click)="tablero.iniciar()">Iniciar</button>
+    <button (click)="tablero.pausar()">Pausar</button>
+    <button (click)="tablero.reiniciarTiempo()">Reiniciar</button>
+    <button (click)="tablero.siguienteCuarto()">Siguiente Período</button>
+  </div>
+
+  <div class="period-possession">
+    <div class="period">
+      <div>PERÍODO</div>
+      <div class="period-box">{{ tablero.partido().cuartoActual }}</div>
+    </div>
+
+    <div class="possession">
+      <div>POSESIÓN</div>
+      <div class="arrows">
+        <button [class.active]="tablero.partido().posesion==='LOCAL'" (click)="tablero.setPosesion('LOCAL')">◄</button>
+        <button [class.active]="tablero.partido().posesion==='NONE'" (click)="tablero.setPosesion('NONE')">•</button>
+        <button [class.active]="tablero.partido().posesion==='VISITANTE'" (click)="tablero.setPosesion('VISITANTE')">►</button>
+      </div>
+    </div>
+  </div>
+</div>
