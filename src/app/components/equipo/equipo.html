@@ -1,6 +1,10 @@
-<div class="team-card">
+<div class="team-card" [class.local]="side()==='LOCAL'" [class.visitante]="side()==='VISITANTE'">
   <div class="team-header">
-    <img *ngIf="equipo().logoUrl" [src]="equipo().logoUrl" alt="logo" class="logo" />
+    <span class="side-chip" [class.local]="side()==='LOCAL'" [class.visitante]="side()==='VISITANTE'">
+      {{ side()==='LOCAL' ? 'LOCAL' : 'VISITANTE' }}
+    </span>
+
+    <img *ngIf="equipo().logoUrl" [src]="equipo().logoUrl" alt="logo equipo" class="logo" />
     <div class="team-name">{{ equipo().nombre }}</div>
   </div>
 
@@ -14,16 +18,21 @@
   </div>
 
   <div class="fouls">
-    <span>Faltas: {{ equipo().faltasTotales }}</span>
+    <span>FALTAS: {{ equipo().faltasTotales }}</span>
     <div class="foul-buttons">
       <button (click)="tablero.addFalta(side(), 1)">+1</button>
       <button (click)="tablero.addFalta(side(), -1)">-1</button>
     </div>
   </div>
 
-  <div class="bonus">
-    <span>BONUS</span>
-    <div class="lamp" [class.on]="equipo().bonus"></div>
-    <button class="mini" (click)="tablero.toggleBonus(side())">activar</button>
-  </div>
+<div class="bonus">
+  <span>BONUS</span>
+  <div class="lamp" [class.on]="equipo().bonus"></div>
+
+  <!-- etiqueta dinámica -->
+  <button class="mini"
+          (click)="tablero.toggleBonus(side())"
+          [class.on]="equipo().bonus">
+    {{ equipo().bonus ? 'desactivar' : 'activar' }}
+  </button>
 </div>

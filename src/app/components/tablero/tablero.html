@@ -1,28 +1,82 @@
 <div class="layout-root" #root>
-  <button class="fs-btn" (click)="toggleFullscreen()"
-          [title]="isFullscreen ? 'Salir de pantalla completa (F)' : 'Pantalla completa (F)'">
-    {{ isFullscreen ? 'Salir' : 'Full' }}
-  </button>
+<div class="top-bar">
+  <div class="left">
+    <button class="back-btn" routerLink="/menu" title="Volver al menú">← Menú</button>
+  </div>
+
+  <div class="center-top">
+    <button class="help-fab" (click)="toggleHelp()" title="Atajos de teclado (H)">?</button>
+  </div>
+
+  <div class="right">
+    <button class="fs-btn" (click)="toggleFullscreen()"
+            [title]="isFullscreen ? 'Salir de pantalla completa (F)' : 'Pantalla completa (F)'">
+      {{ isFullscreen ? 'Salir' : 'Pantalla Completa' }}
+    </button>
+  </div>
+</div>
 
   <div class="layout">
     <app-equipo [equipo]="tablero.local()" side="LOCAL"></app-equipo>
-
-    <div class="center">
-      <app-resultado-tablero></app-resultado-tablero>
-    </div>
-
+    <div class="center"><app-resultado-tablero></app-resultado-tablero></div>
     <app-equipo [equipo]="tablero.visitante()" side="VISITANTE"></app-equipo>
   </div>
 
-  <!-- OVERLAY GAME OVER para todo el tablero -->
+<!-- OVERLAY AYUDA -->
+<div class="help-overlay" *ngIf="showHelp" (click)="toggleHelp()">
+  <div class="help-box" (click)="$event.stopPropagation()">
+    <div class="help-header">
+      <div class="help-title">Atajos de teclado</div>
+      <button class="help-close" (click)="toggleHelp()" aria-label="Cerrar">×</button>
+    </div>
+
+    <div class="help-grid">
+      <div class="help-item"><span class="help-keys"><kbd>H</kbd></span><span>Mostrar/Ocultar ayuda</span></div>
+      <div class="help-item"><span class="help-keys"><kbd>F</kbd></span><span>Pantalla completa</span></div>
+      <div class="help-item"><span class="help-keys"><kbd>Espacio</kbd></span><span>Iniciar / Pausar reloj</span></div>
+      <div class="help-item"><span class="help-keys"><kbd>R</kbd></span><span>Reiniciar tiempo del período</span></div>
+      <div class="help-item"><span class="help-keys"><kbd>N</kbd></span><span>Siguiente período</span></div>
+
+      <div class="help-item">
+        <span class="help-keys"><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd></span>
+        <span>Posesión: Local / Ninguna / Visitante</span>
+      </div>
+
+      <div class="help-item">
+        <span class="help-keys"><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd></span>
+        <span>Puntos Local (+1 / +2 / +3)</span>
+      </div>
+
+      <div class="help-item">
+        <span class="help-keys"><kbd>8</kbd><kbd>9</kbd><kbd>0</kbd></span>
+        <span>Puntos Visitante (+1 / +2 / +3)</span>
+      </div>
+
+      <div class="help-item"><span class="help-keys"><kbd>Esc</kbd></span><span>Cerrar ayuda</span></div>
+    </div>
+
+    <div class="help-footer">
+      <button class="help-primary" (click)="toggleHelp()">Entendido</button>
+    </div>
+  </div>
+</div>
+
+
+  <!-- OVERLAY JUEGO TERMINADO -->
   <div class="gameover"
        *ngIf="!tablero.partido().enJuego
               && tablero.partido().tiempoRestanteSeg === 0
-              && tablero.partido().cuartoActual === 4
+              && tablero.partido().cuartoActual >= 4
               && (tablero.local().punteoTotal !== tablero.visitante().punteoTotal)">
     <div class="gameover-box">
       <div class="title">JUEGO TERMINADO</div>
       <div class="winner">GANADOR: {{ winnerName }}</div>
+
+      <div class="actions">
+        <button class="start-over" (click)="tablero.nuevoPartido(true)">
+          Empezar de nuevo
+        </button>
+      </div>
     </div>
   </div>
 </div>

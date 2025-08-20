@@ -13,6 +13,9 @@ export class TableroService {
   // Límite para activar BONUS automáticamente (FIBA/NBA)
   readonly BONUS_LIMIT = 5;
 
+  // Duración de la prórroga (OT)
+  readonly duracionProrrogaSeg = 5 * 60;
+
   // Estado principal del partido
   readonly partido = signal<PartidoInterface>(this.createDefaultMatch());
 
@@ -23,16 +26,24 @@ export class TableroService {
     this.formatTime(this.partido().tiempoRestanteSeg)
   );
 
-  // Buzzer visual
+  // Buzzer visual (para efectos en UI)
   readonly buzzerOn = signal(false);
 
   constructor() {
-    // Auto-pausa y "buzzer" al llegar a 0
+    // Al llegar el tiempo a 0 con el reloj corriendo:
     effect(() => {
       const p = this.partido();
       if (p.tiempoRestanteSeg <= 0 && p.enJuego) {
+        const tie = p.equipos[0].punteoTotal === p.equipos[1].punteoTotal;
+        const esPeriodoFinalOmas = p.cuartoActual >= 4;
+
         this.pausar();
         this.flashBuzzer();
+
+        // Empate tras 4º u OT => crear prórroga
+        if (esPeriodoFinalOmas && tie) {
+          this.iniciarProrroga();
+        }
       }
     });
   }
@@ -40,16 +51,16 @@ export class TableroService {
   // ---------- Setup ----------
   createDefaultMatch(): PartidoInterface {
     return {
-      nombre: 'THE NATIONAL CHAMPIONSHIP',
+      nombre: 'CAMPEONATO INTERNACIONAL',
       descripcion: 'Exhibición',
       fecha_hora: new Date().toISOString(),
       cuartoActual: 1,
-      duracionCuartoSeg: 10 * 60, 
+      duracionCuartoSeg: 10 * 60,
       tiempoRestanteSeg: 10 * 60,
       enJuego: false,
       equipos: [
         {
-          nombre: 'VIKINGS',
+          nombre: 'VIKINGOS',
           punteoTotal: 0,
           faltasTotales: 0,
           esLocal: true,
@@ -57,7 +68,7 @@ export class TableroService {
           bonus: false,
         },
         {
-          nombre: 'WILDCATS',
+          nombre: 'JAGUARES',
           punteoTotal: 0,
           faltasTotales: 0,
           esLocal: false,
@@ -67,6 +78,56 @@ export class TableroService {
       ],
       posesion: 'NONE',
     };
+  }
+
+  // Permite fijar equipos desde el menú y dejar el partido listo (Período 1)
+  setEquipos(
+    local: { nombre: string; logoUrl?: string },
+    visitante: { nombre: string; logoUrl?: string }
+  ) {
+    this.pausar(); // por si estaba corriendo
+    this.partido.update((v) => {
+      const equipos: [EquipoInterface, EquipoInterface] = [
+        {
+          ...v.equipos[0],
+          nombre: local.nombre,
+          logoUrl: local.logoUrl ?? v.equipos[0].logoUrl,
+          esLocal: true,
+          punteoTotal: 0,
+          faltasTotales: 0,
+          bonus: false,
+        },
+        {
+          ...v.equipos[1],
+          nombre: visitante.nombre,
+          logoUrl: visitante.logoUrl ?? v.equipos[1].logoUrl,
+          esLocal: false,
+          punteoTotal: 0,
+          faltasTotales: 0,
+          bonus: false,
+        },
+      ];
+      return {
+        ...v,
+        equipos,
+        cuartoActual: 1,
+        tiempoRestanteSeg: v.duracionCuartoSeg,
+        enJuego: false,
+        posesion: 'NONE',
+      };
+    });
+  }
+
+  // Helper rápido para tus 2 equipos de prueba
+  setEquiposPorNombre(local: 'VIKINGOS' | 'JAGUARES', visitante: 'VIKINGOS' | 'JAGUARES') {
+    const logos: Record<'VIKINGOS' | 'JAGUARES', string> = {
+      VIKINGOS: 'assets/local.png',
+      JAGUARES: 'assets/visitante.png',
+    };
+    this.setEquipos(
+      { nombre: local, logoUrl: logos[local] },
+      { nombre: visitante, logoUrl: logos[visitante] }
+    );
   }
 
   // ---------- Timer ----------
@@ -114,7 +175,24 @@ export class TableroService {
     return `${m}:${s}`;
   }
 
-  // ---------- Cuartos ----------
+  // ---------- OT ----------
+  private iniciarProrroga() {
+    this.partido.update((v) => {
+      const equipos: [EquipoInterface, EquipoInterface] = [
+        { ...v.equipos[0], faltasTotales: 0, bonus: false },
+        { ...v.equipos[1], faltasTotales: 0, bonus: false },
+      ];
+      return {
+        ...v,
+        cuartoActual: v.cuartoActual + 1, // 5=OT1, 6=OT2...
+        tiempoRestanteSeg: this.duracionProrrogaSeg,
+        enJuego: false,
+        equipos,
+      };
+    });
+  }
+
+  // ---------- Cuartos (botón Next Period) ----------
   siguienteCuarto() {
     this.partido.update((v) => {
       const next = Math.min(4, v.cuartoActual + 1);
@@ -145,7 +223,6 @@ export class TableroService {
     this.partido.update((v) => ({ ...v, posesion: valor }));
   }
 
-  // BONUS manual
   toggleBonus(side: TeamSide) {
     this.partido.update((v) => {
       const equipos = [...v.equipos] as [EquipoInterface, EquipoInterface];
@@ -188,6 +265,30 @@ export class TableroService {
   resetPartido() {
     this.pausar();
     this.partido.set(this.createDefaultMatch());
+  }
+
+  // Reinicia el partido manteniendo los equipos elegidos
+  nuevoPartido(preservarEquipos: boolean = true) {
+    this.pausar();
+    this.buzzerOn.set(false);
+
+    this.partido.update((v) => {
+      const equipos = preservarEquipos
+        ? ([
+            { ...v.equipos[0], punteoTotal: 0, faltasTotales: 0, bonus: false },
+            { ...v.equipos[1], punteoTotal: 0, faltasTotales: 0, bonus: false },
+          ] as [EquipoInterface, EquipoInterface])
+        : this.createDefaultMatch().equipos;
+
+      return {
+        ...v,
+        equipos,
+        cuartoActual: 1,
+        tiempoRestanteSeg: v.duracionCuartoSeg,
+        enJuego: false,
+        posesion: 'NONE',
+      };
+    });
   }
 
   // Buzzer visual simple
