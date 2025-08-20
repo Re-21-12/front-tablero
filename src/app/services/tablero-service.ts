@@ -10,6 +10,17 @@ import {
 export class TableroService {
   private _tickHandle: any = null;
 
+  //  Audio
+  readonly soundOn = signal(true);
+  private startAudio = new Audio('assets/sounds/start.mp3');
+  private safePlay(a: HTMLAudioElement) {
+    if (!this.soundOn()) return;
+    try {
+      a.currentTime = 0;
+      a.play().catch(() => {/* algunos navegadores bloquean si no hubo gesto */});
+    } catch {/* noop */}
+  }
+
   // Límite para activar BONUS automáticamente (FIBA/NBA)
   readonly BONUS_LIMIT = 5;
 
@@ -26,10 +37,14 @@ export class TableroService {
     this.formatTime(this.partido().tiempoRestanteSeg)
   );
 
-  // Buzzer visual (para efectos en UI)
+  // Buzzer visual 
   readonly buzzerOn = signal(false);
 
   constructor() {
+    // volumen del audio
+    this.startAudio.preload = 'auto';
+    this.startAudio.volume = 0.9;
+
     // Al llegar el tiempo a 0 con el reloj corriendo:
     effect(() => {
       const p = this.partido();
@@ -135,6 +150,9 @@ export class TableroService {
     if (this.partido().enJuego) return;
     this.partido.update((v) => ({ ...v, enJuego: true }));
     this.startTicker();
+
+    // audio de inicio
+    this.safePlay(this.startAudio);
   }
 
   pausar() {
@@ -192,7 +210,7 @@ export class TableroService {
     });
   }
 
-  // ---------- Cuartos (botón Next Period) ----------
+  // ---------- Cuartos (cambio de periodo ----------
   siguienteCuarto() {
     this.partido.update((v) => {
       const next = Math.min(4, v.cuartoActual + 1);
@@ -267,7 +285,7 @@ export class TableroService {
     this.partido.set(this.createDefaultMatch());
   }
 
-  // Reinicia el partido manteniendo los equipos elegidos
+  // Reinicia el partido 
   nuevoPartido(preservarEquipos: boolean = true) {
     this.pausar();
     this.buzzerOn.set(false);
