@@ -1,7 +1,7 @@
 import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { TableroService } from '../../../services/tablero-service'; // ajusta ruta si cambiaste carpeta
+import { TableroService } from '../../services/tablero-service'; // ajusta ruta si cambiaste carpeta
 
 type TeamId = 'VIKINGOS' | 'JAGUARES';
 interface Team { id: TeamId; name: string; logo: string; }
@@ -25,7 +25,7 @@ export class Menu {
   local = signal<TeamId | null>(null);
   visitante = signal<TeamId | null>(null);
 
-  // Equipos seleccionados calculados en TS 
+  // Equipos seleccionados calculados en TS
   localTeam = computed<Team | null>(() => {
     const id = this.local();
     return id ? this.teams.find(t => t.id === id) ?? null : null;
