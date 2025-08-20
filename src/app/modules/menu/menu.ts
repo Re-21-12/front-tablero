@@ -65,6 +65,6 @@ export class Menu {
       { nombre: l.name, logoUrl: l.logo },
       { nombre: v.name, logoUrl: v.logo }
     );
-    this.router.navigateByUrl('/home');
+    this.router.navigateByUrl('/tablero');
   }
 }

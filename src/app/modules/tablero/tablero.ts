@@ -1,9 +1,9 @@
 import { Component, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Equipo } from '../equipo/equipo';
-import { ResultadoTablero } from '../resultado-tablero/resultado-tablero';
 import { TableroService } from '../../services/tablero-service';
+import { Equipo } from '../../components/equipo/equipo';
+import { ResultadoTablero } from '../../components/resultado-tablero/resultado-tablero';
 
 @Component({
   selector: 'app-tablero',
