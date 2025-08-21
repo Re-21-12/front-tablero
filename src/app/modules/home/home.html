@@ -1,0 +1,26 @@
+<div class="welcome-layout" [class.sidebar-collapsed]="sidebarCollapsed">
+  <aside class="sidebar" [class.collapsed]="sidebarCollapsed">
+    <button class="toggle-btn" (click)="sidebarCollapsed = !sidebarCollapsed">
+      @if (!sidebarCollapsed) {
+        <span>⮜</span>
+      } @else {
+        <span>⮞</span>
+      }
+    </button>
+    @if (!sidebarCollapsed) {
+      <nav>
+        <ul class="text-white">
+          <li><a routerLink="/localidad" routerLinkActive="active">Localidad</a></li>
+          <li><a routerLink="/equipo" routerLinkActive="active">Equipo</a></li>
+          <li><a routerLink="/cuarto" routerLinkActive="active">Cuarto</a></li>
+          <li><a routerLink="/partido" routerLinkActive="active">Partido</a></li>
+        </ul>
+      </nav>
+    }
+  </aside>
+  <main class="main-content">
+    <h1>¡Bienvenido!</h1>
+    <p>Selecciona una opción del menú para comenzar.</p>
+    <button routerLink="/menu">Selecciona una opción del menú para comenzar.</button>
+  </main>
+</div>

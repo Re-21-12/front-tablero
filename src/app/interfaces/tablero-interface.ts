@@ -50,3 +50,8 @@ export interface RegistroCuartoInterface {
 
 export interface FaltaInterface extends RegistroCuartoInterface {}
 export interface PunteoInterface extends RegistroCuartoInterface {}
+
+export interface ILocalidad {
+  id_Localidad: number;
+  nombre: string;
+}
