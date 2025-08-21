@@ -13,12 +13,13 @@ export class TableroService {
   //  Audio
   readonly soundOn = signal(true);
   private startAudio = new Audio('assets/sounds/start.mp3');
+  private endAudio = new Audio('assets/sounds/period-end.mp3');
   private safePlay(a: HTMLAudioElement) {
     if (!this.soundOn()) return;
     try {
       a.currentTime = 0;
-      a.play().catch(() => {/* algunos navegadores bloquean si no hubo gesto */});
-    } catch {/* noop */}
+      a.play().catch(() => {});
+    } catch {}
   }
 
   // Límite para activar BONUS automáticamente (FIBA/NBA)
@@ -45,6 +46,10 @@ export class TableroService {
     this.startAudio.preload = 'auto';
     this.startAudio.volume = 0.9;
 
+    // NUEVO: preload del audio de fin de período
+    this.endAudio.preload = 'auto';
+    this.endAudio.volume = 0.95;
+
     // Al llegar el tiempo a 0 con el reloj corriendo:
     effect(() => {
       const p = this.partido();
@@ -55,9 +60,16 @@ export class TableroService {
         this.pausar();
         this.flashBuzzer();
 
-        // Empate tras 4º u OT => crear prórroga
-        if (esPeriodoFinalOmas && tie) {
-          this.iniciarProrroga();
+        // Sonido de fin de período/fin de juego
+        this.safePlay(this.endAudio);
+
+        if (!esPeriodoFinalOmas) {
+          // Q1-3: pasar automáticamente al siguiente período
+          this.siguienteCuarto();
+
+        } else if (tie) {
+          // Empate en 4º u OT => prórroga
+          this.iniciarProrroga()
         }
       }
     });

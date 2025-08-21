@@ -69,16 +69,39 @@ export class Tablero {
       // Ayuda
       case 'KeyH': e.preventDefault(); this.toggleHelp(); break;
       case 'Escape': if (this.showHelp) { e.preventDefault(); this.showHelp = false; } break;
+    }
 
-      // Puntos LOCAL (1/2/3)
-      case 'Digit1': this.tablero.addPuntos('LOCAL', 1); break;
-      case 'Digit2': this.tablero.addPuntos('LOCAL', 2); break;
-      case 'Digit3': this.tablero.addPuntos('LOCAL', 3); break;
+    // Puntos LOCAL (1/2/3)  — con Shift para restar
+    const localMap: Record<string, number> = {
+      Digit1: 1, Digit2: 2, Digit3: 3,
+      Numpad1: 1, Numpad2: 2, Numpad3: 3,
+    };
+    if (e.code in localMap) {
+      const delta = e.shiftKey ? -localMap[e.code] : localMap[e.code];
+      this.tablero.addPuntos('LOCAL', delta);
+      return;
+    }
 
-      // Puntos VISITANTE (8/9/0)
-      case 'Digit8': this.tablero.addPuntos('VISITANTE', 1); break;
-      case 'Digit9': this.tablero.addPuntos('VISITANTE', 2); break;
-      case 'Digit0': this.tablero.addPuntos('VISITANTE', 3); break;
+    // Puntos VISITANTE (8/9/0)  — con Shift para restar
+    const visitMap: Record<string, number> = {
+      Digit8: 1, Digit9: 2, Digit0: 3,
+      Numpad8: 1, Numpad9: 2, Numpad0: 3,
+    };
+    if (e.code in visitMap) {
+      const delta = e.shiftKey ? -visitMap[e.code] : visitMap[e.code];
+      this.tablero.addPuntos('VISITANTE', delta);
+      return;
+    }
+
+    // Faltas: Local (A/S) — Visitante (K/L)
+    switch (e.code) {
+      // LOCAL: A (+1), S (-1)
+      case 'KeyA': e.preventDefault(); this.tablero.addFalta('LOCAL', 1); return;
+      case 'KeyS': e.preventDefault(); this.tablero.addFalta('LOCAL', -1); return;
+
+      // VISITANTE: K (+1), L (-1)
+      case 'KeyK': e.preventDefault(); this.tablero.addFalta('VISITANTE', 1); return;
+      case 'KeyL': e.preventDefault(); this.tablero.addFalta('VISITANTE', -1); return;
     }
   }
 

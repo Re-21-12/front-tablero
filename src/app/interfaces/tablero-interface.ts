@@ -5,7 +5,7 @@ export interface PartidoInterface {
   id?: number;
   nombre: string;
   descripcion: string;
-  fecha_hora: string;           // ISO string
+  fecha_hora: string;           
   cuartoActual: number;         // 1..4
   duracionCuartoSeg: number;    // duración por período en segundos
   tiempoRestanteSeg: number;    // tiempo restante del período en segundos
