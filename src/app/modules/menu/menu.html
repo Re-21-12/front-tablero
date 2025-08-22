@@ -1,0 +1,73 @@
+<div class="menu-wrap">
+  <h1 class="title">Selecciona equipos</h1>
+
+  <section class="picked">
+    <div class="slot local">
+      <div class="slot-title">LOCAL</div>
+
+      <ng-container *ngIf="localTeam() as lt; else noneL">
+        <div class="logo-wrap">
+          <img class="logo" [src]="lt.logo" [alt]="lt.name" />
+        </div>
+        <div class="name">{{ lt.name }}</div>
+      </ng-container>
+
+      <ng-template #noneL>
+        <div class="empty">Sin seleccionar</div>
+      </ng-template>
+    </div>
+
+    <button class="swap" type="button" (click)="swap()" [disabled]="!(local() && visitante())">⇄</button>
+
+    <div class="slot visitante">
+      <div class="slot-title">VISITANTE</div>
+
+      <ng-container *ngIf="visitanteTeam() as vt; else noneV">
+        <div class="logo-wrap">
+          <img class="logo" [src]="vt.logo" [alt]="vt.name" />
+        </div>
+        <div class="name">{{ vt.name }}</div>
+      </ng-container>
+
+      <ng-template #noneV>
+        <div class="empty">Sin seleccionar</div>
+      </ng-template>
+    </div>
+  </section>
+
+  <section class="grid">
+    <!-- Cards para elegir LOCAL -->
+    <button
+      class="team"
+      type="button"
+      *ngFor="let t of teams"
+      (click)="pick('LOCAL', t.id)"
+      [class.selected]="local()===t.id">
+      <div class="logo-wrap">
+        <img class="logo" [src]="t.logo" [alt]="t.name" />
+      </div>
+      <div class="team-name">{{ t.name }}</div>
+      <div class="assign">Asignar a LOCAL</div>
+    </button>
+
+    <!-- Cards para elegir VISITANTE -->
+    <button
+      class="team"
+      type="button"
+      *ngFor="let t of teams"
+      (click)="pick('VISITANTE', t.id)"
+      [class.selected]="visitante()===t.id">
+      <div class="logo-wrap">
+        <img class="logo" [src]="t.logo" [alt]="t.name" />
+      </div>
+      <div class="team-name">{{ t.name }}</div>
+      <div class="assign">Asignar a VISITANTE</div>
+    </button>
+  </section>
+
+  <footer class="foot">
+    <button class="start" type="button" (click)="start()" [disabled]="!canStart()">
+      Comenzar partido
+    </button>
+  </footer>
+</div>

@@ -1,0 +1,38 @@
+.scoreboard {
+  display: flex; flex-direction: column; align-items: center; gap: .75rem;
+  background: #0b2a6f; color: #fff; padding: 1rem; border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,.35);
+}
+.title { font-weight: 900; font-size: 1.2rem; letter-spacing: .08em; text-transform: uppercase; }
+
+.timer {
+  font-size: 5rem; font-weight: 900; line-height: 1; background: #111;
+  padding: .4rem 1rem; border-radius: .6rem; box-shadow: inset 0 0 10px rgba(0,0,0,.6);
+}
+.timer.buzzer { animation: buzz 200ms linear 10; }
+@keyframes buzz {
+  0% { transform: translateX(0); background: #250a0a; }
+  25% { transform: translateX(-4px); background: #400a0a; }
+  50% { transform: translateX(0); background: #250a0a; }
+  75% { transform: translateX(4px); background: #400a0a; }
+  100% { transform: translateX(0); background: #250a0a; }
+}
+
+.controls { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; }
+.controls button {
+  padding: .5rem .8rem; border: none; border-radius: .5rem; font-weight: 700;
+  cursor: pointer; background: #1b9aaa; color: #fff;
+}
+.controls button:hover { filter: brightness(1.1); }
+
+.period-possession { display: flex; gap: 2rem; align-items: center; justify-content: center; }
+.period { display: flex; flex-direction: column; align-items: center; gap: .25rem; }
+.period .period-box { font-size: 2.5rem; background: #111; padding: .2rem .6rem; border-radius: .4rem; }
+
+.possession { display: flex; flex-direction: column; gap: .25rem; align-items: center; }
+.arrows { display: flex; gap: .4rem; }
+.arrows button {
+  width: 40px; height: 40px; border-radius: .4rem; border: none; font-size: 1.1rem;
+  cursor: pointer; background: #243b6b; color: #fff;
+}
+.arrows button.active { background: #ffe066; color: #222; font-weight: 900; }
