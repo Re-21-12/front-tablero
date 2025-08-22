@@ -7,8 +7,9 @@ type TeamId = 'VIKINGOS' | 'JAGUARES';
 interface Team { id: TeamId; name: string; logo: string; }
 
 const TEAMS: Team[] = [
-  { id: 'VIKINGOS', name: 'VIKINGOS', logo: 'assets/local.png' },
-  { id: 'JAGUARES', name: 'JAGUARES', logo: 'assets/visitante.png' },
+  { id: 'VIKINGOS', name: 'VIKINGOS', logo: 'assets/teams/vikingos.jpg' },
+  { id: 'JAGUARES', name: 'JAGUARES', logo: 'assets/teams/jaguares.png' },
+
 ];
 
 @Component({

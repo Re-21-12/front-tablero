@@ -1,34 +1,73 @@
 .menu-wrap{ max-width:980px; margin:0 auto; padding:1rem; color:#fff; font-family:Inter,system-ui,Arial,sans-serif; }
 .title{ font-size:clamp(1.3rem,3vw,2rem); font-weight:900; letter-spacing:.04em; margin:.25rem 0 1rem; }
 
+/* ============ Selección (previews LOCAL / VISITANTE) ============ */
 .picked{
   display:grid; grid-template-columns:1fr auto 1fr; gap:1rem; align-items:center; margin-bottom:1rem;
 }
-.slot{ background:#0b2a6f; border-radius:.8rem; padding:.75rem; display:flex; align-items:center; gap:.6rem; min-height:84px; box-shadow:0 10px 25px rgba(0,0,0,.35); }
-.slot img{ width:48px; height:48px; object-fit:contain; background:#fff; border-radius:.4rem; padding:.2rem; }
-.slot .name{ font-weight:800; }
+.slot{
+  background:#0b2a6f; border-radius:.8rem; padding:.75rem;
+  display:flex; align-items:center; gap:.6rem;
+  min-height:clamp(96px, 14vw, 140px);
+  box-shadow:0 10px 25px rgba(0,0,0,.35);
+}
 .slot .slot-title{ font-size:.8rem; opacity:.8; margin-right:.25rem; }
+.slot .name{ font-weight:800; }
 .slot.local{ border-left:4px solid #1dd1a1; }
 .slot.visitante{ border-left:4px solid #ee5253; }
 .empty{ opacity:.7; font-style:italic; }
 
+/* Logo grande y confinado en previews */
+.slot .logo-wrap{
+  width: clamp(84px, 16vw, 160px);
+  height: clamp(84px, 16vw, 160px);
+  display:flex; align-items:center; justify-content:center;
+  background:#fff; border-radius:.6rem; padding:.3rem;
+  overflow:hidden; /* evita desborde */
+}
+.slot .logo{
+  width:100%; height:100%; object-fit:contain; display:block;
+}
+
+/* Botón de intercambio */
 .swap{ border:none; border-radius:.5rem; padding:.5rem .7rem; background:#243b6b; color:#fff; cursor:pointer; }
 .swap:disabled{ opacity:.4; cursor:not-allowed; }
 
+/* ============ Grid de equipos ============ */
 .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:.75rem; }
 .team{
   display:flex; flex-direction:column; gap:.5rem; align-items:center; justify-content:center;
   background:#0a1747; border:none; color:#fff; padding:1rem; border-radius:.8rem; cursor:pointer;
   box-shadow:0 10px 25px rgba(0,0,0,.35);
+  transition:transform .15s ease, filter .15s ease;
 }
-.team img{ width:72px; height:72px; object-fit:contain; background:#fff; border-radius:.5rem; padding:.3rem; }
-.team .team-name{ font-weight:800; text-align:center; }
-.team .assign{ font-size:.85rem; opacity:.8; }
+.team:hover{ transform:translateY(-2px); filter:brightness(1.05); }
 .team.selected{ outline:3px solid #ffe066; }
 
+/* Logo grande y confinado en cards */
+.team .logo-wrap{
+  width: clamp(96px, 18vw, 180px);
+  height: clamp(96px, 18vw, 180px);
+  display:flex; align-items:center; justify-content:center;
+  background:#fff; border-radius:.6rem; padding:.35rem;
+  overflow:hidden;
+}
+.team .logo{
+  width:100%; height:100%; object-fit:contain; display:block;
+}
+
+.team .team-name{ font-weight:800; text-align:center; }
+.team .assign{ font-size:.85rem; opacity:.8; }
+
+/* ============ Footer ============ */
 .foot{ display:flex; justify-content:center; margin-top:1rem; }
 .start{
   padding:.7rem 1.1rem; border:none; border-radius:.6rem; background:#1b9aaa; color:#fff; font-weight:900;
   box-shadow:0 8px 20px rgba(0,0,0,.35); cursor:pointer;
 }
 .start:disabled{ opacity:.4; cursor:not-allowed; }
+
+/* ============ Responsive ============ */
+@media (max-width: 900px){
+  .picked{ grid-template-columns:1fr; }
+}
