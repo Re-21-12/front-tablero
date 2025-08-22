@@ -91,7 +91,11 @@ export class TableroService {
           punteoTotal: 0,
           faltasTotales: 0,
           esLocal: true,
+<<<<<<< HEAD
           logoUrl: 'assets/local.png',
+=======
+          logoUrl: 'assets/teams/vikingos.jpg',
+>>>>>>> 68aeaa2b19d8b058483123eb865bdaac33a2820a
           bonus: false,
         },
         {
@@ -99,7 +103,11 @@ export class TableroService {
           punteoTotal: 0,
           faltasTotales: 0,
           esLocal: false,
+<<<<<<< HEAD
           logoUrl: 'assets/visitante.png',
+=======
+          logoUrl: 'assets/teams/jaguares.png',
+>>>>>>> 68aeaa2b19d8b058483123eb865bdaac33a2820a
           bonus: false,
         },
       ],

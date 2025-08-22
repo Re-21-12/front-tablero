@@ -5,7 +5,11 @@ export interface PartidoInterface {
   id?: number;
   nombre: string;
   descripcion: string;
+<<<<<<< HEAD
   fecha_hora: string;
+=======
+  fecha_hora: string;           
+>>>>>>> 68aeaa2b19d8b058483123eb865bdaac33a2820a
   cuartoActual: number;         // 1..4
   duracionCuartoSeg: number;    // duración por período en segundos
   tiempoRestanteSeg: number;    // tiempo restante del período en segundos
@@ -55,7 +59,10 @@ export interface ILocalidad {
   id_Localidad: number;
   nombre: string;
 }
+<<<<<<< HEAD
 export interface IEquipo {
   id_Equipo: number;
   nombre: string;
 }
+=======
+>>>>>>> 68aeaa2b19d8b058483123eb865bdaac33a2820a
