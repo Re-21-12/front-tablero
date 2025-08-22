@@ -1,1 +1,22 @@
-<p>equipo works!</p>
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+    <h2 class="text-2xl font-bold mb-4 text-center">Equipo</h2>
+    <form [formGroup]="equipoForm" (ngSubmit)="enviar()" class="space-y-4">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>ID Equipo</mat-label>
+        <input matInput type="number" formControlName="id_Equipo" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Nombre</mat-label>
+        <input matInput type="text" formControlName="nombre" />
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="equipoForm.invalid" class="w-full">
+        Enviar
+      </button>
+    </form>
+    @for(equipo of equipos; track $index){
+      <div class="border-b py-2">
+        <h3 class="font-semibold">{{ equipo.nombre }}</h3>
+        <p>ID: {{ equipo.id_Equipo }}</p>
+      </div>
+    }
+</div>

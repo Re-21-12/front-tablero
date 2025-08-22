@@ -1,39 +1,67 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { TableroService } from '../../services/tablero-service'; // ajusta ruta si cambiaste carpeta
+import { TableroService } from '../../services/tablero-service';
+import { ApiService } from '../../services/api-service';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { NgModel, FormsModule } from '@angular/forms';
+import { ILocalidad } from '../../interfaces/tablero-interface';
 
-type TeamId = 'VIKINGOS' | 'JAGUARES';
-interface Team { id: TeamId; name: string; logo: string; }
-
-const TEAMS: Team[] = [
-  { id: 'VIKINGOS', name: 'VIKINGOS', logo: 'assets/local.png' },
-  { id: 'JAGUARES', name: 'JAGUARES', logo: 'assets/visitante.png' },
-];
+export interface IEquipo {
+  id_Equipo: number;
+  nombre: string;
+  url?: string; // Si tienes logo, si no, quítalo
+}
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    FormsModule, // <--- agrega esto
+    MatInputModule,
+    MatFormFieldModule,
+    MatButtonModule,
+  ],
   templateUrl: './menu.html',
   styleUrl: './menu.css',
 })
-export class Menu {
+export class Menu implements OnInit {
+  private apiService = inject(ApiService);
+  equipos = signal<IEquipo[]>([]);
+  localidades = signal<ILocalidad[]>([]);
+  local = signal<number | null>(null);
+  visitante = signal<number | null>(null);
+  localidadSeleccionada = signal<number | null>(null);
+
   constructor(private router: Router, public tablero: TableroService) {}
 
-  teams = TEAMS;
-  local = signal<TeamId | null>(null);
-  visitante = signal<TeamId | null>(null);
+  ngOnInit(): void {
+    this.getEquipos();
+    this.getLocalidad();
+  }
 
-  // Equipos seleccionados calculados en TS
-  localTeam = computed<Team | null>(() => {
+  getEquipos() {
+    this.apiService.get('/Equipo').subscribe((data: any) => {
+      this.equipos.set(data);
+    });
+  }
+  getLocalidad() {
+    this.apiService.get('/Localidad').subscribe((data: any) => {
+      this.localidades.set(data);
+    });
+  }
+
+  localTeam = computed<IEquipo | null>(() => {
     const id = this.local();
-    return id ? this.teams.find(t => t.id === id) ?? null : null;
+    return id !== null ? this.equipos().find(t => t.id_Equipo === id) ?? null : null;
   });
 
-  visitanteTeam = computed<Team | null>(() => {
+  visitanteTeam = computed<IEquipo | null>(() => {
     const id = this.visitante();
-    return id ? this.teams.find(t => t.id === id) ?? null : null;
+    return id !== null ? this.equipos().find(t => t.id_Equipo === id) ?? null : null;
   });
 
   canStart = computed(() => {
@@ -41,7 +69,7 @@ export class Menu {
     return !!(l && v && l !== v);
   });
 
-  pick(side: 'LOCAL' | 'VISITANTE', id: TeamId) {
+  pick(side: 'LOCAL' | 'VISITANTE', id: number) {
     if (side === 'LOCAL') {
       if (this.visitante() === id) this.visitante.set(null);
       this.local.set(id);
@@ -52,19 +80,25 @@ export class Menu {
   }
 
   swap() {
-    const l = this.local(); const v = this.visitante();
-    this.local.set(v); this.visitante.set(l);
+    const l = this.local();
+    const v = this.visitante();
+    this.local.set(v);
+    this.visitante.set(l);
   }
 
   start() {
-    const l = this.localTeam();      // ← usa los computed
+    const l = this.localTeam();
     const v = this.visitanteTeam();
     if (!l || !v) return;
 
     this.tablero.setEquipos(
-      { nombre: l.name, logoUrl: l.logo },
-      { nombre: v.name, logoUrl: v.logo }
+      { nombre: l.nombre, logoUrl: l.url },
+      { nombre: v.nombre, logoUrl: v.url }
     );
     this.router.navigateByUrl('/tablero');
+  }
+
+  seleccionarLocalidad(id: number) {
+    this.localidadSeleccionada.set(id);
   }
 }

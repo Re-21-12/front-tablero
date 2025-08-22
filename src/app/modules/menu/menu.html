@@ -3,10 +3,9 @@
 
   <section class="picked">
     <div class="slot local">
-      <div class="slot-title">LOCAL</div>
       <ng-container *ngIf="localTeam() as lt; else noneL">
-        <img [src]="lt.logo" alt="logo" />
-        <div class="name">{{ lt.name }}</div>
+        <img *ngIf="lt.url" [src]="lt.url" alt="logo" />
+        <div class="name">{{ lt.nombre }}</div>
       </ng-container>
       <ng-template #noneL><div class="empty">Sin seleccionar</div></ng-template>
     </div>
@@ -14,37 +13,49 @@
     <button class="swap" (click)="swap()" [disabled]="!(local() && visitante())">⇄</button>
 
     <div class="slot visitante">
-      <div class="slot-title">VISITANTE</div>
       <ng-container *ngIf="visitanteTeam() as vt; else noneV">
-        <img [src]="vt.logo" alt="logo" />
-        <div class="name">{{ vt.name }}</div>
+        <img *ngIf="vt.url" [src]="vt.url" alt="logo" />
+        <div class="name">{{ vt.nombre }}</div>
       </ng-container>
       <ng-template #noneV><div class="empty">Sin seleccionar</div></ng-template>
     </div>
   </section>
 
+  <!-- Nueva sección para agregar localidad -->
+
+
   <section class="grid">
     <!-- Cards para elegir LOCAL -->
     <button class="team"
-            *ngFor="let t of teams"
-            (click)="pick('LOCAL', t.id)"
-            [class.selected]="local()===t.id">
-      <img [src]="t.logo" alt="" />
-      <div class="team-name">{{ t.name }}</div>
-      <div class="assign">Asignar a LOCAL</div>
+            *ngFor="let t of equipos()"
+            (click)="pick('LOCAL', t.id_Equipo)"
+            [class.selected]="local()===t.id_Equipo">
+      <img *ngIf="t.url" [src]="t.url" alt="" />
+      <div class="team-name">{{ t.nombre }}</div>
+      <div class="assign">Asignar</div>
     </button>
 
     <!-- Cards para elegir VISITANTE -->
     <button class="team"
-            *ngFor="let t of teams"
-            (click)="pick('VISITANTE', t.id)"
-            [class.selected]="visitante()===t.id">
-      <img [src]="t.logo" alt="" />
-      <div class="team-name">{{ t.name }}</div>
-      <div class="assign">Asignar a VISITANTE</div>
+            *ngFor="let t of equipos()"
+            (click)="pick('VISITANTE', t.id_Equipo)"
+            [class.selected]="visitante()===t.id_Equipo">
+      <img *ngIf="t.url" [src]="t.url" alt="" />
+      <div class="team-name">{{ t.nombre }}</div>
+      <div class="assign">Asignar</div>
     </button>
   </section>
 
+  <h1 class="title mt-2">Selecciona localidad</h1>
+  <section class="grid">
+    <button class="team"
+            *ngFor="let l of localidades()"
+            (click)="seleccionarLocalidad(l.id_Localidad)"
+            [class.selected]="localidadSeleccionada()===l.id_Localidad">
+      <div class="team-name">{{ l.nombre }}</div>
+      <div class="assign">Seleccionar</div>
+    </button>
+  </section>
   <footer class="foot">
     <button class="start" (click)="start()" [disabled]="!canStart()">Comenzar partido</button>
   </footer>

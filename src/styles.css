@@ -1,9 +1,17 @@
-* { box-sizing: border-box; }
-html, body { height: 100%; }
+@import "tailwindcss";
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
 body {
   margin: 0;
   background: #0f1b2e;
   color: #fff;
   font-family: Inter, system-ui, Arial, sans-serif;
 }
-button { font-family: inherit; }
+button {
+  font-family: inherit;
+}
